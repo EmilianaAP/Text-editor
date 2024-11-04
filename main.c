@@ -11,39 +11,55 @@ int main(void) {
     size_t len = strlen(input);
     if (len > 0 && input[len - 1] == '\n') input[len - 1] = '\0';
 
-    // Open file in "a+" mode (read from start, append to end, create if not exists)
     FILE *file = fopen(input, "a+");
     if (file == NULL) {
         printf("Error opening or creating file!\n");
         return -1;
     }
 
-    // Display file info
     printf("+-------------------------------------------------------------+\n");
-    printf("| File: %-40s Ln 10, Col 5 |\n", input);
+    printf("| File: %-40s Ln 1, Col 1 |\n", input);
     printf("+-------------------------------------------------------------+\n");
 
-    // Read and display existing content
-    printf("Existing file contents:\n");
-    rewind(file);  // Move to the beginning for reading
     char line[100];
     int line_number = 1;
-    while (fgets(line, sizeof(line), file)) {
-        printf("| %d | %s", line_number++, line);  // Display line number and content
+    char command[10];
+
+    while (1) {
+        rewind(file);  // Move to the beginning to read
+        printf("File contents:\n");
+
+        while (fgets(line, sizeof(line), file)) {
+            printf("| %d | %s", line_number++, line);
+        }
+
+        printf("| %d | ", line_number);
+        char new_content[100];
+        fgets(new_content, sizeof(new_content), stdin);
+
+        printf("+-------------------------------------------------------------+\n");
+        printf("| Commands: :save = Save | :quit = Quit | :find = Find        |\n");
+        printf("+-------------------------------------------------------------+\n\n");
+
+        new_content[strcspn(new_content, "\n")] = '\0';
+
+        if (strcmp(new_content, ":save") == 0) {
+            fseek(file, 0, SEEK_END);
+            printf("File saved.\n");
+        } else if (strcmp(new_content, ":quit") == 0) {
+            printf("Quitting...\n");
+            break;
+        } else if (strlen(new_content) > 0) {
+            fseek(file, 0, SEEK_END);
+            fputs(new_content, file);
+            fputs("\n", file);
+            printf("Content appended to file.\n");
+            line_number++;
+        } else {
+            printf("No new content added.\n");
+        }
     }
 
-    // Adding new content to the file
-    printf("\nEnter text to append to the file (or press ENTER to skip): ");
-    char new_content[100];
-    fgets(new_content, sizeof(new_content), stdin);
-    if (strlen(new_content) > 1) {  // If input is not just newline
-        fseek(file, 0, SEEK_END);  // Move to end of file to append
-        fputs(new_content, file);
-        printf("Content appended to file.\n");
-    } else {
-        printf("No new content added.\n");
-    }
-
-    fclose(file);  // Close the file
+    fclose(file);
     return 0;
 }
