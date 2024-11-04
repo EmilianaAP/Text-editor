@@ -1,0 +1,3 @@
+/Users/emilianapetrenko/CLionProjects/Text-editor/cmake-build-debug/CMakeFiles/Text_editor.dir
+/Users/emilianapetrenko/CLionProjects/Text-editor/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/emilianapetrenko/CLionProjects/Text-editor/cmake-build-debug/CMakeFiles/rebuild_cache.dir
