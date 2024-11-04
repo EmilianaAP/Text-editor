@@ -1,1 +1,2 @@
-# Text-editor
+# Text-editor (C project)
+
